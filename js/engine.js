@@ -22,13 +22,22 @@ var Engine = (function(global) {
     var doc = global.document,
         win = global.window,
         canvas = doc.createElement('canvas'),
+        //canvas2 = doc.createElement('canvas'),
+        //ctx2 = canvas2.getContext('2d');
+        //ctx2.width="200";
+        //ctx2.height ="800";
+        //window.appendChild(canvas2);
+       
         ctx = canvas.getContext('2d'),
         lastTime;
+       var jump = document.getElementById("jump");
+         var die = document.getElementById("move");
 
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
 
+   
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
@@ -67,6 +76,8 @@ var Engine = (function(global) {
         reset();
         lastTime = Date.now();
         main();
+        background.play();
+        background.loop=true;
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -79,11 +90,42 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
+
         updateEntities(dt);
-        // checkCollisions();
+     checkCollisions();
+        checkPoint();
+    }
+    function checkPoint()
+    {
+        allEnemies.forEach(function(enemy)
+        {
+            if(enemy.x >= canvas.width)
+            {
+                enemy.x = 5 * Math.random()+ Math.random()*(enemy.y*2);
+            }
+        });
+        if(player.y <0)
+        {
+            player.x = 200;
+            player.y = 420;
+        }
+    }
+    function checkCollisions(){
+         allEnemies.forEach(function(enemy)
+        {
+            if((player.x+ 50 >=enemy.x)&& (player.x +50<= enemy.x+101)&&(player.y +150 >=enemy.y)&&(player.y + 150 <=enemy.y +171))
+            {
+                
+                player.x = 200;
+                player.y = 420;
+                jump.play();
+                
+            }
+        });
+    
     }
 
-    /* This is called by the update function  and loops through all of the
+    /* Thier is called by the update function  and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
      * player object. These update methods should focus purely on updating
