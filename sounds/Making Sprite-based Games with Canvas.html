@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)http://jlongster.com/Making-Sprite-based-Games-with-Canvas -->
+<html class="wf-adellesans-n7-inactive wf-adellesans-n4-inactive wf-inactive"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Making Sprite-based Games with Canvas</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="http://jlongster.com/favicon.ico">
+    <link rel="alternate" type="application/atom+xml" href="http://feedpress.me/jlongster" title="Atom Feed">
+    <link rel="stylesheet" type="text/css" href="./Making Sprite-based Games with Canvas_files/tomorrow-night.css">
+    <link rel="stylesheet" type="text/css" href="./Making Sprite-based Games with Canvas_files/styles.css">
+
+    <script async="" src="./Making Sprite-based Games with Canvas_files/analytics.js"></script><script id="twitter-wjs" src="./Making Sprite-based Games with Canvas_files/widgets.js"></script><script type="text/javascript" src="./Making Sprite-based Games with Canvas_files/eeq3shn.js"></script>
+    <style type="text/css">.tk-adelle-sans{font-family:"adelle-sans",sans-serif;}</style><link rel="stylesheet" href="http://use.typekit.net/c/b46158/1w;adelle-sans,2,XHv:P:n4,XHz:P:n7/d?3bb2a6e53c9684ffdc9a9bf7135b2a62c569a8ddca988f707fda98ce28d4492bc5df4452dbf6a0a8c526ba5f38283132d87c073cb4b00937895db9cf2ed5211abddc2919ddcee00df5ac78950400e3a45e1522954444c36124df212d8c92a964a9d2fc9a410bd9b7b7e3200bd00960f9b75ec141b61ea9"><script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+  </head>
+  <body class="post-page" data-twttr-rendered="true">
+    <div id="mount"><div data-reactid=".2eo18ixgt1c" data-react-checksum="-1011024692"><div class="" data-reactid=".2eo18ixgt1c.0"></div><div id="Making-Sprite-based-Games-with-Canvas" data-reactid=".2eo18ixgt1c.1"><header class="" data-reactid=".2eo18ixgt1c.1.0"><div class="links" data-reactid=".2eo18ixgt1c.1.0.0"><a class="home" href="http://jlongster.com/" data-reactid=".2eo18ixgt1c.1.0.0.0">J</a><ul data-reactid=".2eo18ixgt1c.1.0.0.1"><li data-reactid=".2eo18ixgt1c.1.0.0.1.0"><a href="http://jlongster.com/archive" data-reactid=".2eo18ixgt1c.1.0.0.1.0.0">posts</a></li><li data-reactid=".2eo18ixgt1c.1.0.0.1.1"><a href="http://feedpress.me/jlongster" data-reactid=".2eo18ixgt1c.1.0.0.1.1.0">rss</a></li><li data-reactid=".2eo18ixgt1c.1.0.0.1.2"><a href="http://twitter.com/jlongster" data-reactid=".2eo18ixgt1c.1.0.0.1.2.0">twitter</a></li></ul></div><span data-reactid=".2eo18ixgt1c.1.0.1"></span></header><main data-reactid=".2eo18ixgt1c.1.1"><div class="main-wrapper" data-reactid=".2eo18ixgt1c.1.1.1"><noscript data-reactid=".2eo18ixgt1c.1.1.1.0"></noscript><noscript data-reactid=".2eo18ixgt1c.1.1.1.1:0"></noscript><noscript data-reactid=".2eo18ixgt1c.1.1.1.1:1"></noscript><article class="post" data-reactid=".2eo18ixgt1c.1.1.1.1:2"><span data-reactid=".2eo18ixgt1c.1.1.1.1:2.0"></span><h1 data-reactid=".2eo18ixgt1c.1.1.1.1:2.1">Making Sprite-based Games with Canvas</h1><div class="date" data-reactid=".2eo18ixgt1c.1.1.1.1:2.2">March 19, 2013</div><div data-reactid=".2eo18ixgt1c.1.1.1.1:2.3"><p id="p16">The web is everywhere, and offers a very powerful and non-traditional environment for creating and distributing apps. Instead of the code-compile-run cycle, simply refresh your app or even write code live within the browser. Additionally, it's relatively painless to distribute your app across a huge number of platforms. It's exciting that in the past few years, developing games using HTML5, the technology behind the web, has become a reality.</p>
+
+<p id="p17">The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html">canvas element</a> was introduced with <a href="http://en.wikipedia.org/wiki/HTML5">HTML5</a> and provides an API for rendering on the web. The API is simple, but if you've never done graphics work before it might take some getting used to. It has great <a href="http://caniuse.com/#feat=canvas">cross-browser support</a> at this point, and it makes the web a viable platform for games.</p>
+
+<p id="p18">Using canvas is simple: just create a <code>&lt;canvas&gt;</code> tag, create a rendering context from it in javascript, and use methods like <code>fillRect</code> and <code>drawImage</code> on the context to render shapes and images. The <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html">API</a> has a lot of methods for rendering arbitrary paths, applying transformations, and more.</p>
+
+<p id="p19">In this article, we're going to create a 2d game with canvas; a real game with sprites, animations, collision detection, and of course, explosions! What's a game without explosions?</p>
+
+<p id="p20">This is the game we're going to make (<a href="http://jlongster.github.com/canvas-game-bootstrap/">play it here</a>). I wrapped this up into a <a href="https://github.com/jlongster/canvas-game-bootstrap">game bootstrap</a> project that you can use to quickly get started. I recomend checking out the source and running it locally by opening <code>index.html</code>.</p>
+
+<p id="p21"><a href="http://jlongster.github.com/canvas-game-bootstrap/"><img src="./Making Sprite-based Games with Canvas_files/screenshot.png" alt="" title=""></a></p>
+
+<h2 id="Gearing-Up">Gearing Up<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Gearing-Up" class="text-anchor">#</a></h2>
+
+<p id="p22">The game might look complex, but it really just boils down to a few technical components. I've always been amazed how far you can go with canvas, simple collision detection, some sprites, and a game loop.</p>
+
+<p id="p23">However, in order to focus on the game components, I'm not going to fully explain every single line of code and API call. This tutorial is going to be somewhat advanced, but I hope that it's clear enough so that people of all skill levels can follow along. It's meant to explain basic game concepts, with a few more advanced techniques like sprite animations mixed in. This article assumes that you are familiar with JavaScript and basic HTML APIs. It also skims over the canvas API and some basic game concepts like the game loop.</p>
+
+<p id="p24">For a more basic tutorial, check out <a href="http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/">How to make a simple HTML5 Canvas Game</a> and <a href="http://jdstraughan.com/2013/03/05/html5-snake-with-source-code-walkthrough/">HTML5 Snake source code walkthrough</a>.</p>
+
+<h3 id="Using-Free-Graphics">Using Free Graphics<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Using-Free-Graphics" class="text-anchor">#</a></h3>
+
+<p id="p25">It really sucks to try to make games for the first few times, because there's a lot to learn and you don't have any time to make cool graphics. I highly recommend using a free set of graphics until you have time to make your own.</p>
+
+<p id="p26"><a href="http://hasgraphics.com/">HasGraphics</a> is an awesome place to find free 2d graphics. I'm using the <a href="http://www.lostgarden.com/2005/03/game-post-mortem-hard-vacuum.html">Hard Vacuum</a> set for this example game.</p>
+
+<p id="p27">You also learn how real graphics are stored and how to work with them. In this tutorial I will show how I integrated them.</p>
+
+<h2 id="Creating-the-Canvas">Creating the Canvas<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Creating-the-Canvas" class="text-anchor">#</a></h2>
+
+<p id="p28">Let's start by digging into the code. Most of the game is in <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js">app.js</a> in the <code>js</code> directory.</p>
+
+<p id="p29">The very first thing we do is create the canvas tag, set the width and height, and add it to the <code>body</code> tag. We do this dynamically to keep everything in javascript, but you could add a <code>canvas</code> tag in the HTML file and use something like <code>getElementById</code> to get it too. There's no difference between these two methods, it's just a matter of preference where the canvas element is created.</p>
+
+<pre><code class="javascript hljs"><span class="hljs-comment">// Create the canvas</span>
+<span class="hljs-keyword">var</span> canvas = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"canvas"</span>);
+<span class="hljs-keyword">var</span> ctx = canvas.getContext(<span class="hljs-string">"2d"</span>);
+canvas.width = <span class="hljs-number">512</span>;
+canvas.height = <span class="hljs-number">480</span>;
+<span class="hljs-built_in">document</span>.body.appendChild(canvas);
+</code></pre>
+
+<p id="p30">The <code>canvas</code> element has a <code>getContext</code> method which is what you use to get the rendering context. The context is the object on which you call all of the rendering APIs. You can also pass <code>webgl</code> if you want a <a href="https://developer.mozilla.org/en-US/docs/WebGL">WebGL</a> context for 3d scenes.</p>
+
+<p id="p31">From here on, we will be using the <code>ctx</code> variable to render everything.</p>
+
+<h2 id="Game-Loop">Game Loop<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Game-Loop" class="text-anchor">#</a></h2>
+
+<p id="p32">You need a game loop that continually updates and renders the game. <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L22">Here's what it looks like</a>:</p>
+
+<pre><code class="javascript hljs"><span class="hljs-comment">// The main game loop</span>
+<span class="hljs-keyword">var</span> lastTime;
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">var</span> now = <span class="hljs-built_in">Date</span>.now();
+    <span class="hljs-keyword">var</span> dt = (now - lastTime) / <span class="hljs-number">1000.0</span>;
+
+    update(dt);
+    render();
+
+    lastTime = now;
+    requestAnimFrame(main);
+};
+</code></pre>
+
+<p id="p33">You update and render the scene, and then use <a href="http://paulirish.com/2011/requestanimationframe-for-smart-animating/">requestAnimationFrame</a> to queue up the next loop. It's basically a smarter way of saying <code>setTimeout(main, 1000 / 60)</code>, which attempts to render a 60 frames/second. At the <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L2">very top</a> of app.js we shim rAF as the <code>requestAnimFrame</code> function since <a href="http://caniuse.com/#feat=requestanimationframe">not all browsers</a> support it yet.</p>
+
+<p id="p34"><strong>Never <em>ever</em></strong> use <code>setTimeout(main, 1000 / 60)</code>, as it's less accurate and also wastes a lot of cycles by rendering when unnecessary.</p>
+
+<p id="p35">The <code>update</code> function takes the time that has changed since the last update. <strong>Never</strong> update your scene with constant values per frame (like <code>x += 5;</code>). Your game will run wildly different on various computers and platforms, so you need to update your scene independently of framerate.</p>
+
+<p id="p36">This is achieved by calculating the time since last update (in seconds), and expressing all movements in pixels/second units. Movement then becomes <code>x += 50 * dt</code>, or "50 pixels per second".</p>
+
+<h2 id="Loading-Resources-an">Loading Resources and Starting the Game<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Loading-Resources-an" class="text-anchor">#</a></h2>
+
+<p id="p37">The next section of code initializes the game and loads all resources. This uses one of the few separate utility classes that I wrote, <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/resources.js">resources.js</a>. It's a very simple library that loads images and fires an event when they are all loaded.</p>
+
+<p id="p38">Games require a lot of assets, like images, scene data, and so on. For 2d games, most or all of the assets are images. You need to load all your assets before starting the game so that they can be immediately used.</p>
+
+<p id="p39">It's easy to load an image in javascript and do something when it's available:</p>
+
+<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> img = <span class="hljs-keyword">new</span> Image();
+img.onload = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    startGame();
+};
+img.src = url;
+</code></pre>
+
+<p id="p40">This gets really tedious though if you have several images to load. You need to make a bunch of global variables, and in each <code>onload</code> check if all of them are loaded. I wrote a basic resource loader to handle all of this automatically. Get ready for some code!</p>
+
+<pre><code class="javascript hljs">
+(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">var</span> resourceCache = {};
+    <span class="hljs-keyword">var</span> loading = [];
+    <span class="hljs-keyword">var</span> readyCallbacks = [];
+
+    <span class="hljs-comment">// Load an image url or an array of image urls</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">load</span><span class="hljs-params">(urlOrArr)</span> </span>{
+        <span class="hljs-keyword">if</span>(urlOrArr <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>) {
+            urlOrArr.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> </span>{
+                _load(url);
+            });
+        }
+        <span class="hljs-keyword">else</span> {
+            _load(urlOrArr);
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_load</span><span class="hljs-params">(url)</span> </span>{
+        <span class="hljs-keyword">if</span>(resourceCache[url]) {
+            <span class="hljs-keyword">return</span> resourceCache[url];
+        }
+        <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">var</span> img = <span class="hljs-keyword">new</span> Image();
+            img.onload = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+                resourceCache[url] = img;
+
+                <span class="hljs-keyword">if</span>(isReady()) {
+                    readyCallbacks.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(func)</span> </span>{ func(); });
+                }
+            };
+            resourceCache[url] = <span class="hljs-literal">false</span>;
+            img.src = url;
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get</span><span class="hljs-params">(url)</span> </span>{
+        <span class="hljs-keyword">return</span> resourceCache[url];
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isReady</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">var</span> ready = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> k <span class="hljs-keyword">in</span> resourceCache) {
+            <span class="hljs-keyword">if</span>(resourceCache.hasOwnProperty(k) &amp;&amp;
+               !resourceCache[k]) {
+                ready = <span class="hljs-literal">false</span>;
+            }
+        }
+        <span class="hljs-keyword">return</span> ready;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onReady</span><span class="hljs-params">(func)</span> </span>{
+        readyCallbacks.push(func);
+    }
+
+    <span class="hljs-built_in">window</span>.resources = { 
+        load: load,
+        get: get,
+        onReady: onReady,
+        isReady: isReady
+    };
+})();
+</code></pre>
+
+<p id="p41">The way this works is your game calls <code>resources.load</code> with all the images to load, and then calls <code>resources.onReady</code> to register a callback for when everything is loaded. This assumes that you won't call <code>resources.load</code> later in the game; it only works at startup.</p>
+
+<p id="p42">It keeps a cache of images in <code>resourceCache</code>, and when the image loads it checks to see if all the requested images have loaded, and if so calls all the registered callbacks. Now we can just do this in our game:</p>
+
+<pre><code class="javascript hljs">resources.load([
+    <span class="hljs-string">'img/sprites.png'</span>,
+    <span class="hljs-string">'img/terrain.png'</span>
+]);
+resources.onReady(init);
+</code></pre>
+
+<p id="p43">To get an image once the game starts, we just do <code>resources.get('img/sprites.png')</code>. Easy!</p>
+
+<p id="p44">You can manually load images and start the game or use something like <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/resources.js">resources.js</a> to make it easier.</p>
+
+<p id="p45">In the above code, <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L35"><code>init</code></a> is called when all the images are loaded, which creates the background pattern, hooks up the "Play Again" button, resets the game state, and starts the game.</p>
+
+<pre><code class="javascript hljs"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">init</span><span class="hljs-params">()</span> </span>{
+    terrainPattern = ctx.createPattern(resources.get(<span class="hljs-string">'img/terrain.png'</span>), <span class="hljs-string">'repeat'</span>);
+
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'play-again'</span>).addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+        reset();
+    });
+
+    reset();
+    lastTime = <span class="hljs-built_in">Date</span>.now();
+    main();
+}
+</code></pre>
+
+<h2 id="Game-State">Game State<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Game-State" class="text-anchor">#</a></h2>
+
+<p id="p46">Now we're rolling! Let's start implementing some game logic. At the core of every game is <em>game state</em>. This is data that represents the current state: a list of objects in the scene with position and other info, current score, time since the player last fired, and anything else.</p>
+
+<p id="p47">This is all of the game state for our game:</p>
+
+<pre><code class="javascript hljs"><span class="hljs-comment">// Game state</span>
+<span class="hljs-keyword">var</span> player = {
+    pos: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+    sprite: <span class="hljs-keyword">new</span> Sprite(<span class="hljs-string">'img/sprites.png'</span>, [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">39</span>, <span class="hljs-number">39</span>], <span class="hljs-number">16</span>, [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>])
+};
+
+<span class="hljs-keyword">var</span> bullets = [];
+<span class="hljs-keyword">var</span> enemies = [];
+<span class="hljs-keyword">var</span> explosions = [];
+
+<span class="hljs-keyword">var</span> lastFire = <span class="hljs-built_in">Date</span>.now();
+<span class="hljs-keyword">var</span> gameTime = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">var</span> isGameOver;
+<span class="hljs-keyword">var</span> terrainPattern;
+
+<span class="hljs-comment">// The score</span>
+<span class="hljs-keyword">var</span> score = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">var</span> scoreEl = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'score'</span>);
+
+</code></pre>
+
+<p id="p48">This looks like a lot, but it's not that complicated. Most of it is keeping track of when the player last fired a bullet (<code>lastFire</code>), how long the game has been playing (<code>gameTime</code>), if the game is over (<code>isGameOver</code>), the terrain pattern image (<code>terrainPattern</code>), and the score (<code>score</code>). There's also a list of objects in the scene: bullets, enemies, and explosions.</p>
+
+<p id="p49">There's also the <code>player</code> entity, which keeps track of where the player is and the sprite state. Before we move on in the code, let's talk about entities and sprites. </p>
+
+<h2 id="Entities---Sprites">Entities &amp; Sprites<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Entities---Sprites" class="text-anchor">#</a></h2>
+
+<h3 id="Entities">Entities<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Entities" class="text-anchor">#</a></h3>
+
+<p id="p50">An "entity" is an object in the scene. Anything from a ship to a bullet to an explosion is an entity.</p>
+
+<p id="p51">Entities in this system are simple javascript objects which keep track of where they are in the scene and more. This is a pretty simple system where we are manually handling each entity type, so there isn't any enforced structure. Each of our entities has <code>pos</code> and <code>sprite</code> field, and possibly more. For example, if we wanted to add an enemy to our scene, we would do:</p>
+
+<pre><code class="javascript hljs">enemies.push({
+    pos: [<span class="hljs-number">100</span>, <span class="hljs-number">50</span>],
+    sprite: <span class="hljs-keyword">new</span> Sprite(<span class="hljs-comment">/* sprite parameters */</span>)
+});
+</code></pre>
+
+<p id="p52">This adds an enemy at x=100 and y=50 with the specified sprite.</p>
+
+<p id="p53"><a id="sprites"></a></p>
+
+<h3 id="Sprites---Animation">Sprites &amp; Animation<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Sprites---Animation" class="text-anchor">#</a></h3>
+
+<p id="p54">A "sprite" is an image that is rendered to represent an entity. Sprites are more complex because we want to animate them. Without animation, sprites could be simple images that are rendered with <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage"><code>ctx.drawImage</code></a>.</p>
+
+<p id="p55">Animations are critical to a fun experience though, so it's really important that we implement it.</p>
+
+<p id="p56">We can implement animations by loading several images and flipping through them over time. This is called keyframe animation.</p>
+
+<p id="p57"><img src="./Making Sprite-based Games with Canvas_files/frames.png" alt="" title=""></p>
+
+<p id="p58">If we alternate through these images back and forth, this is what it looks like:</p>
+
+<p id="p59"><img src="./Making Sprite-based Games with Canvas_files/test.gif" alt="" title=""></p>
+
+<p id="p60">In order to make it easier to edit each keyframe and load them, these images are commonly put all into one image, called a sprite map. You may already be familiar with this technique <a href="http://davidwalsh.name/firefox-animation">in CSS</a>. In fact, many times <em>several</em> different sprite animations are contained in a single sprite map. Here's the sprite map for our example game (with a transparent background):</p>
+
+<p id="p61"><img src="./Making Sprite-based Games with Canvas_files/sprites.png" alt="" title=""></p>
+
+<p id="p62">Like I mentioned at the beginning of this tutorial, I'm using the <a href="http://www.lostgarden.com/2005/03/game-post-mortem-hard-vacuum.html">Hard Vacuum</a> set of graphics. The set is a just bunch of <code>bmp</code> files, so I copied the individual graphics I needed and pasted them into a single sprite sheet. You'll need a simple graphics editor to do this (anything that can move pixels around should work). If you don't have one, you'll have to work with the existing formats and possibly change how the sprite animations load them. You could also find a different set or work with simple colored rectangles.</p>
+
+<p id="p63">It would be difficult to manage all of these animations manually, however. This is where the second utility class comes in: <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/sprite.js">sprite.js</a>. This is a small file that wraps up the animation logic into a reusable type. Let's dig into it.</p>
+
+<pre><code class="javascript hljs"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Sprite</span><span class="hljs-params">(url, pos, size, speed, frames, dir, once)</span> </span>{
+    <span class="hljs-keyword">this</span>.pos = pos;
+    <span class="hljs-keyword">this</span>.size = size;
+    <span class="hljs-keyword">this</span>.speed = <span class="hljs-keyword">typeof</span> speed === <span class="hljs-string">'number'</span> ? speed : <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">this</span>.frames = frames;
+    <span class="hljs-keyword">this</span>._index = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">this</span>.url = url;
+    <span class="hljs-keyword">this</span>.dir = dir || <span class="hljs-string">'horizontal'</span>;
+    <span class="hljs-keyword">this</span>.once = once;
+};
+</code></pre>
+
+<p id="p64">This is the constructor for the <code>Sprite</code> class. It takes quite a number of arguments, but not all of them are required. Let's go through them one by one:</p>
+
+<ul>
+<li id="li1"><code>url</code>: the path to the image for this sprite</li>
+<li id="li2"><code>pos</code>: the x and y coordinate in the image for this sprite</li>
+<li id="li3"><code>size</code>: size of the sprite (just one keyframe)</li>
+<li id="li4"><code>speed</code>: speed in frames/sec for animating</li>
+<li id="li5"><code>frames</code>: an array of frame indexes for animating: [0, 1, 2, 1]</li>
+<li id="li6"><code>dir</code>: which direction to move in the sprite map when animating: 'horizontal' (default) or 'vertical'</li>
+<li id="li7"><code>once</code>: <code>true</code> to only run the animation once, defaults to <code>false</code></li>
+</ul>
+
+<p id="p65">The <code>frames</code> argument might need more explanation. The system assumes that all frames of an animation are the same size (the size passed in above). When animating, the system simply walks through the sprite map either horizontally or vertically (depending on <code>dir</code>) by starting at <code>pos</code> and incrementing by the x or y value of <code>size</code>. You need to specify <code>frames</code> to tell it <em>how</em> to walk, though, and each number references the frame to use. So <code>[0, 1, 2, 3, 2, 1]</code> would animate to the end and then reverse to the beginning.</p>
+
+<p id="p66">Only <code>url</code>, <code>pos</code>, and <code>size</code> are required, since you might not need animation.</p>
+
+<p id="p67">Every <code>Sprite</code> object has an <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/sprite.js#L15"><code>update</code></a> method for updating the animation, and it takes the length of time since last update just like our global update. Every sprite needs to be updated each frame.</p>
+
+<pre><code class="javascript hljs">Sprite.prototype.update = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(dt)</span> </span>{
+    <span class="hljs-keyword">this</span>._index += <span class="hljs-keyword">this</span>.speed*dt;
+}
+</code></pre>
+
+<p id="p68">Every <code>Sprite</code> object also has a <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/sprite.js#L19"><code>render</code></a> method for actually drawing itself. This is where most of the animation logic lives. It checks to see which frame it should render, calculates the coordinates within the sprite map, and calls <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage"><code>ctx.drawImage</code></a> to draw it.</p>
+
+<pre><code class="javascript hljs">Sprite.prototype.render = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ctx)</span> </span>{
+    <span class="hljs-keyword">var</span> frame;
+
+    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.speed &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">var</span> max = <span class="hljs-keyword">this</span>.frames.length;
+        <span class="hljs-keyword">var</span> idx = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-keyword">this</span>._index);
+        frame = <span class="hljs-keyword">this</span>.frames[idx % max];
+
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.once &amp;&amp; idx &gt;= max) {
+            <span class="hljs-keyword">this</span>.done = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">return</span>;
+        }
+    }
+    <span class="hljs-keyword">else</span> {
+        frame = <span class="hljs-number">0</span>;
+    }
+
+
+    <span class="hljs-keyword">var</span> x = <span class="hljs-keyword">this</span>.pos[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">var</span> y = <span class="hljs-keyword">this</span>.pos[<span class="hljs-number">1</span>];
+
+    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.dir == <span class="hljs-string">'vertical'</span>) {
+        y += frame * <span class="hljs-keyword">this</span>.size[<span class="hljs-number">1</span>];
+    }
+    <span class="hljs-keyword">else</span> {
+        x += frame * <span class="hljs-keyword">this</span>.size[<span class="hljs-number">0</span>];
+    }
+
+    ctx.drawImage(resources.get(<span class="hljs-keyword">this</span>.url),
+                  x, y,
+                  <span class="hljs-keyword">this</span>.size[<span class="hljs-number">0</span>], <span class="hljs-keyword">this</span>.size[<span class="hljs-number">1</span>],
+                  <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,
+                  <span class="hljs-keyword">this</span>.size[<span class="hljs-number">0</span>], <span class="hljs-keyword">this</span>.size[<span class="hljs-number">1</span>]);
+}
+</code></pre>
+
+<p id="p69">We use the 3rd form of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage"><code>drawImage</code></a> which lets us specify an offset and size for the sprite and the destination separately.</p>
+
+<h2 id="Updating-the-Scene">Updating the Scene<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Updating-the-Scene" class="text-anchor">#</a></h2>
+
+<p id="p70">Remember back in our game loop when we called <code>update(dt)</code> every frame? We need to define that function now, which needs to handle input, update all the sprites, update the positions of entities, and handle collision.</p>
+
+<pre><code class="javascript hljs"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">update</span><span class="hljs-params">(dt)</span> </span>{
+    gameTime += dt;
+
+    handleInput(dt);
+    updateEntities(dt);
+
+    <span class="hljs-comment">// It gets harder over time by adding enemies using this</span>
+    <span class="hljs-comment">// equation: 1-.993^gameTime</span>
+    <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Math</span>.random() &lt; <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">.993</span>, gameTime)) {
+        enemies.push({
+            pos: [canvas.width,
+                  <span class="hljs-built_in">Math</span>.random() * (canvas.height - <span class="hljs-number">39</span>)],
+            sprite: <span class="hljs-keyword">new</span> Sprite(<span class="hljs-string">'img/sprites.png'</span>, [<span class="hljs-number">0</span>, <span class="hljs-number">78</span>], [<span class="hljs-number">80</span>, <span class="hljs-number">39</span>],
+                               <span class="hljs-number">6</span>, [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>])
+        });
+    }
+
+    checkCollisions();
+
+    scoreEl.innerHTML = score;
+};
+</code></pre>
+
+<p id="p71">Note how we add new enemies to the scene. We add an enemy if a random value is lower then a threshold, and it's added at the right side of the game just outside the view. It is randomly placed on the y axis by multiplying a random value by the canvas height minus the height of the enemy, so that the bottom doesn't cut any off. The value <code>39</code> is hardcoded because we know that's the height of the sprite. This code is simpler for the sake of the tutorial.</p>
+
+<p id="p72">The threshold increases over time with the function <a href="https://www.google.com/search?hl=en&site=&source=hp&q=1-.993^x&oq=1-.993^x&gs_l=hp.3...1436.6047.0.6566.8.8.0.0.0.0.264.874.4j3j1.8.0.les%3B..0.0...1c.1.5.hp.xQBpEcL-gyQ"><code>1 - Math.pow(.993, gameTime)</code></a>. <code>Math.random</code> returns a value between 0 and 1, and that function is about .13 at 20 seconds into the game, and slowly increases according to an exponential curve. The game is probably way too hard but it's illustrative.  </p>
+
+<h3 id="Input">Input<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Input" class="text-anchor">#</a></h3>
+
+<p id="p73">To handle input, I create one more utility library: <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/input.js">input.js</a>. This is very small library that simply keeps the state of the currently pressed keys by adding keydown and keyup event handlers to the document. I don't think it's worth posting here, but please go <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/input.js">check it out</a> on github.</p>
+
+<p id="p74">The input library exports one single function, <code>input.isDown</code>, which takes a character such as <code>'a'</code> and returns true if it's currently pressed. You can also pass <code>'SPACE'</code>, <code>'LEFT'</code>, <code>'UP'</code> , <code>'RIGHT'</code>, and <code>'DOWN'</code>.</p>
+
+<p id="p75">Now we can handle input like this:</p>
+
+<pre><code class="javascript hljs"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleInput</span><span class="hljs-params">(dt)</span> </span>{
+    <span class="hljs-keyword">if</span>(input.isDown(<span class="hljs-string">'DOWN'</span>) || input.isDown(<span class="hljs-string">'s'</span>)) {
+        player.pos[<span class="hljs-number">1</span>] += playerSpeed * dt;
+    }
+
+    <span class="hljs-keyword">if</span>(input.isDown(<span class="hljs-string">'UP'</span>) || input.isDown(<span class="hljs-string">'w'</span>)) {
+        player.pos[<span class="hljs-number">1</span>] -= playerSpeed * dt;
+    }
+
+    <span class="hljs-keyword">if</span>(input.isDown(<span class="hljs-string">'LEFT'</span>) || input.isDown(<span class="hljs-string">'a'</span>)) {
+        player.pos[<span class="hljs-number">0</span>] -= playerSpeed * dt;
+    }
+
+    <span class="hljs-keyword">if</span>(input.isDown(<span class="hljs-string">'RIGHT'</span>) || input.isDown(<span class="hljs-string">'d'</span>)) {
+        player.pos[<span class="hljs-number">0</span>] += playerSpeed * dt;
+    }
+
+    <span class="hljs-keyword">if</span>(input.isDown(<span class="hljs-string">'SPACE'</span>) &amp;&amp;
+       !isGameOver &amp;&amp;
+       <span class="hljs-built_in">Date</span>.now() - lastFire &gt; <span class="hljs-number">100</span>) {
+        <span class="hljs-keyword">var</span> x = player.pos[<span class="hljs-number">0</span>] + player.sprite.size[<span class="hljs-number">0</span>] / <span class="hljs-number">2</span>;
+        <span class="hljs-keyword">var</span> y = player.pos[<span class="hljs-number">1</span>] + player.sprite.size[<span class="hljs-number">1</span>] / <span class="hljs-number">2</span>;
+
+        bullets.push({ pos: [x, y],
+                       dir: <span class="hljs-string">'forward'</span>,
+                       sprite: <span class="hljs-keyword">new</span> Sprite(<span class="hljs-string">'img/sprites.png'</span>, [<span class="hljs-number">0</span>, <span class="hljs-number">39</span>], [<span class="hljs-number">18</span>, <span class="hljs-number">8</span>]) });
+        bullets.push({ pos: [x, y],
+                       dir: <span class="hljs-string">'up'</span>,
+                       sprite: <span class="hljs-keyword">new</span> Sprite(<span class="hljs-string">'img/sprites.png'</span>, [<span class="hljs-number">0</span>, <span class="hljs-number">50</span>], [<span class="hljs-number">9</span>, <span class="hljs-number">5</span>]) });
+        bullets.push({ pos: [x, y],
+                       dir: <span class="hljs-string">'down'</span>,
+                       sprite: <span class="hljs-keyword">new</span> Sprite(<span class="hljs-string">'img/sprites.png'</span>, [<span class="hljs-number">0</span>, <span class="hljs-number">60</span>], [<span class="hljs-number">9</span>, <span class="hljs-number">5</span>]) });
+
+
+        lastFire = <span class="hljs-built_in">Date</span>.now();
+    }
+}
+</code></pre>
+
+<p id="p76">If the user presses the down arrow or the 's' key, we move the player up the y axis. The canvas coordinate system places (0, 0) at the top left, so moving up the y axis moves the object down the screen. We do the same for the up, left, and right keys.</p>
+
+<p id="p77">Notice that we defined the <code>playerSpeed</code> variable at the <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L71">top of app.js</a>. Here are the speeds we defined:</p>
+
+<pre><code class="javascript hljs"><span class="hljs-comment">// Speed in pixels per second</span>
+<span class="hljs-keyword">var</span> playerSpeed = <span class="hljs-number">200</span>;
+<span class="hljs-keyword">var</span> bulletSpeed = <span class="hljs-number">500</span>;
+<span class="hljs-keyword">var</span> enemySpeed = <span class="hljs-number">100</span>;
+</code></pre>
+
+<p id="p78">By multiplying <code>playerSpeed</code> by the <code>dt</code> parameter, we calculate the correct amount of pixels to move for that frame. If 1 second has passed since that last update (which is the <code>dt</code> parameter), the player would move 200 pixels. If .5 seconds have passed, he would move 100 pixels. This shows a constant rate of movement independant of framerate.</p>
+
+<p id="p79">The last thing we do is fire a bullet if the space button is pressed, the game isn't over, and it's been more than 100 milliseconds since the last bullet was fired. <code>lastFire</code> is a global variable that is part of the game state. It helps us control the rate of fire; otherwise the player could fire a bullet <em>every frame</em>! That's a little too easy, right?</p>
+
+<pre><code class="javascript hljs"><span class="hljs-keyword">var</span> x = player.pos[<span class="hljs-number">0</span>] + player.sprite.size[<span class="hljs-number">0</span>] / <span class="hljs-number">2</span>;
+<span class="hljs-keyword">var</span> y = player.pos[<span class="hljs-number">1</span>] + player.sprite.size[<span class="hljs-number">1</span>] / <span class="hljs-number">2</span>;
+
+bullets.push({ pos: [x, y],
+               dir: <span class="hljs-string">'forward'</span>,
+               sprite: <span class="hljs-keyword">new</span> Sprite(<span class="hljs-string">'img/sprites.png'</span>, [<span class="hljs-number">0</span>, <span class="hljs-number">39</span>], [<span class="hljs-number">18</span>, <span class="hljs-number">8</span>]) });
+bullets.push({ pos: [x, y],
+               dir: <span class="hljs-string">'up'</span>,
+               sprite: <span class="hljs-keyword">new</span> Sprite(<span class="hljs-string">'img/sprites.png'</span>, [<span class="hljs-number">0</span>, <span class="hljs-number">50</span>], [<span class="hljs-number">9</span>, <span class="hljs-number">5</span>]) });
+bullets.push({ pos: [x, y],
+               dir: <span class="hljs-string">'down'</span>,
+               sprite: <span class="hljs-keyword">new</span> Sprite(<span class="hljs-string">'img/sprites.png'</span>, [<span class="hljs-number">0</span>, <span class="hljs-number">60</span>], [<span class="hljs-number">9</span>, <span class="hljs-number">5</span>]) });
+
+lastFire = <span class="hljs-built_in">Date</span>.now();
+
+</code></pre>
+
+<p id="p80">If we are firing a bullet, we add 3 bullet entities to the scene. The <code>bullets</code> array keeps track of all the bullets to the scene, so it's as simple as pushing them on there.</p>
+
+<p id="p81">We calculate the position of the new bullets in the <code>x</code> and <code>y</code> variables. We add them at the position of the player, plus half the width and height of the player so that they shoot from the center of the ship.</p>
+
+<p id="p82"><img src="./Making Sprite-based Games with Canvas_files/ship-bullets.png" alt="" title=""></p>
+
+<p id="p83">We add 3 bullets because they shoot out from different directions. This makes the game easier because the player can't get "trapped" horizontally when they are lots of ships. To differentiate the types of bullets, we add a <code>dir</code> property to the entity with a value of <code>'forward'</code>, <code>'up'</code>, or <code>'down'</code>.</p>
+
+<h3 id="Entities">Entities<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Entities" class="text-anchor">#</a></h3>
+
+<p id="p84">All of the entities need to be updated. We have the single player entity and 3 arrays for bullets, enemies, and explosions.</p>
+
+<pre><code class="javascript hljs"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateEntities</span><span class="hljs-params">(dt)</span> </span>{
+    <span class="hljs-comment">// Update the player sprite animation</span>
+    player.sprite.update(dt);
+
+    <span class="hljs-comment">// Update all the bullets</span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;bullets.length; i++) {
+        <span class="hljs-keyword">var</span> bullet = bullets[i];
+
+        <span class="hljs-keyword">switch</span>(bullet.dir) {
+        <span class="hljs-keyword">case</span> <span class="hljs-string">'up'</span>: bullet.pos[<span class="hljs-number">1</span>] -= bulletSpeed * dt; <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">'down'</span>: bullet.pos[<span class="hljs-number">1</span>] += bulletSpeed * dt; <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">default</span>:
+            bullet.pos[<span class="hljs-number">0</span>] += bulletSpeed * dt;
+        }
+
+        <span class="hljs-comment">// Remove the bullet if it goes offscreen</span>
+        <span class="hljs-keyword">if</span>(bullet.pos[<span class="hljs-number">1</span>] &lt; <span class="hljs-number">0</span> || bullet.pos[<span class="hljs-number">1</span>] &gt; canvas.height ||
+           bullet.pos[<span class="hljs-number">0</span>] &gt; canvas.width) {
+            bullets.splice(i, <span class="hljs-number">1</span>);
+            i--;
+        }
+    }
+
+    <span class="hljs-comment">// Update all the enemies</span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;enemies.length; i++) {
+        enemies[i].pos[<span class="hljs-number">0</span>] -= enemySpeed * dt;
+        enemies[i].sprite.update(dt);
+
+        <span class="hljs-comment">// Remove if offscreen</span>
+        <span class="hljs-keyword">if</span>(enemies[i].pos[<span class="hljs-number">0</span>] + enemies[i].sprite.size[<span class="hljs-number">0</span>] &lt; <span class="hljs-number">0</span>) {
+            enemies.splice(i, <span class="hljs-number">1</span>);
+            i--;
+        }
+    }
+
+    <span class="hljs-comment">// Update all the explosions</span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;explosions.length; i++) {
+        explosions[i].sprite.update(dt);
+
+        <span class="hljs-comment">// Remove if animation is done</span>
+        <span class="hljs-keyword">if</span>(explosions[i].sprite.done) {
+            explosions.splice(i, <span class="hljs-number">1</span>);
+            i--;
+        }
+    }
+}
+</code></pre>
+
+<p id="p85">Let's start at the top: the player's sprite is updated by simply calling the <code>update</code> function on the sprite. This moves the animation forward.</p>
+
+<p id="p86">The next 3 loops go through the individual bullets, enemies, and explosions. The process is the same for all of them: update the sprite, update the movement, and possibly remove it if it's offscreen. Since all entities can never change direction, there's no need to keep them in the scene when they move off, and it would only slow down our game the longer it is played.</p>
+
+<p id="p87">The bullet's movement is the most complicated:</p>
+
+<pre><code class="javascript hljs"><span class="hljs-keyword">switch</span>(bullet.dir) {
+<span class="hljs-keyword">case</span> <span class="hljs-string">'up'</span>: bullet.pos[<span class="hljs-number">1</span>] -= bulletSpeed * dt; <span class="hljs-keyword">break</span>;
+<span class="hljs-keyword">case</span> <span class="hljs-string">'down'</span>: bullet.pos[<span class="hljs-number">1</span>] += bulletSpeed * dt; <span class="hljs-keyword">break</span>;
+<span class="hljs-keyword">default</span>:
+    bullet.pos[<span class="hljs-number">0</span>] += bulletSpeed * dt;
+}
+</code></pre>
+
+<p id="p88">If <code>bullet.dir</code> is <code>'up'</code>, we move the bullet down the y-axis (which moves it up the screen). The opposite for <code>'down'</code>, and the default case is to move forward along the x axis.</p>
+
+<pre><code class="javascript hljs"><span class="hljs-comment">// Remove the bullet if it goes offscreen</span>
+<span class="hljs-keyword">if</span>(bullet.pos[<span class="hljs-number">1</span>] &lt; <span class="hljs-number">0</span> || bullet.pos[<span class="hljs-number">1</span>] &gt; canvas.height ||
+   bullet.pos[<span class="hljs-number">0</span>] &gt; canvas.width) {
+    bullets.splice(i, <span class="hljs-number">1</span>);
+    i--;
+}
+</code></pre>
+
+<p id="p89">Then we check to see if we should remove the bullet. The position is checked against the top, right, and bottom sides because bullets move up, right, and down. We don't make sure the whole bullet sprite is offscreen because the bullets move fast enough not to master. Simply checking the position (which is the top-left corner of the sprite) is enough.</p>
+
+<p id="p90">To remove the bullet, we destructively modify the <code>bullets</code> array and decrement the <code>i</code> in the loop since the array has been modified. If we didn't do this, the next bullet would be skipped.</p>
+
+<p id="p91">(Note: I wouldn't consider this a "best practice"; it's best to mark which ones need to be removed and remove them later. This fixes a lot of potential bugs with syncing issues, but for this tutorial we are keeping it simple. The right way to do it is to mark the object to be removed by setting a property like “toRemove” on it, and removing all the objects in a separate pass in the <code>update</code> method.)</p>
+
+<h3 id="Collision-Detection">Collision Detection<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Collision-Detection" class="text-anchor">#</a></h3>
+
+<p id="p92">Now for something that everybody fears: collision detection! It's actually not as hard as it sounds, at least for our 2d game. It would be hard if we had to <em>resolve</em> collisions.</p>
+
+<p id="p93">Resolving a collision means that you move one or both objects so that they are not colliding anymore. You need this for platformers where the player can run into a wall and the wall pushes back to stop him. For our game, we just need to make things explode!</p>
+
+<p id="p94">There are 3 types of collisions we need to check:</p>
+
+<ol>
+<li id="li8">Enemies hit by bullets</li>
+<li id="li9">The player hit by an enemy</li>
+<li id="li10">The player hits the edge of the screen</li>
+</ol>
+
+<p id="p95">Detecting 2d collisions is simple:</p>
+
+<pre><code class="javascript hljs"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">collides</span><span class="hljs-params">(x, y, r, b, x2, y2, r2, b2)</span> </span>{
+    <span class="hljs-keyword">return</span> !(r &lt;= x2 || x &gt; r2 ||
+             b &lt;= y2 || y &gt; b2);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">boxCollides</span><span class="hljs-params">(pos, size, pos2, size2)</span> </span>{
+    <span class="hljs-keyword">return</span> collides(pos[<span class="hljs-number">0</span>], pos[<span class="hljs-number">1</span>],
+                    pos[<span class="hljs-number">0</span>] + size[<span class="hljs-number">0</span>], pos[<span class="hljs-number">1</span>] + size[<span class="hljs-number">1</span>],
+                    pos2[<span class="hljs-number">0</span>], pos2[<span class="hljs-number">1</span>],
+                    pos2[<span class="hljs-number">0</span>] + size2[<span class="hljs-number">0</span>], pos2[<span class="hljs-number">1</span>] + size2[<span class="hljs-number">1</span>]);
+}
+</code></pre>
+
+<p id="p96">These two functions could be consolidated into one, but I find it easier to read this way. <code>collides</code> takes the coordinates for the top/left and bottom/right corners for both boxes and checks to see if there are any gaps.</p>
+
+<p id="p97">Think of it this way: if <code>r</code> is the x coordinate of the right side of box A and <code>x2</code> is the x coordinate of the left side of box B, if <code>r &lt;= x2</code> is true then there's a gap and no matter any other positions or sizes of the boxes there cannot be an overlap, so there is no collision. There are 4 checks: one for each sides of the boxes. If there's ever a gap: no collision.</p>
+
+<p id="p98">Illustrations might help here, but this article isn't focusing on collision detection. You should be able to use the above functions without worrying too much about how it works. (Note: technically this is a very simplified form of the <a href="http://www.sevenson.com.au/actionscript/sat/">separating axis theorem</a>). If you google "2d box collision" you will find this algorithm in several forms.</p>
+
+<p id="p99">The <code>boxCollides</code> function is a wrapper around <code>collides</code> so that we can pass our native vector objects into it (which are simple 2-element arrays). It also converts our <code>size</code> values into absolute coordinates so it can compare the values.</p>
+
+<p id="p100">And here's the mother lode of code that actually runs the collision detection:</p>
+
+<pre><code class="javascript hljs"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkCollisions</span><span class="hljs-params">()</span> </span>{
+    checkPlayerBounds();
+
+    <span class="hljs-comment">// Run collision detection for all enemies and bullets</span>
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;enemies.length; i++) {
+        <span class="hljs-keyword">var</span> pos = enemies[i].pos;
+        <span class="hljs-keyword">var</span> size = enemies[i].sprite.size;
+
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> j=<span class="hljs-number">0</span>; j&lt;bullets.length; j++) {
+            <span class="hljs-keyword">var</span> pos2 = bullets[j].pos;
+            <span class="hljs-keyword">var</span> size2 = bullets[j].sprite.size;
+
+            <span class="hljs-keyword">if</span>(boxCollides(pos, size, pos2, size2)) {
+                <span class="hljs-comment">// Remove the enemy</span>
+                enemies.splice(i, <span class="hljs-number">1</span>);
+                i--;
+
+                <span class="hljs-comment">// Add score</span>
+                score += <span class="hljs-number">100</span>;
+
+                <span class="hljs-comment">// Add an explosion</span>
+                explosions.push({
+                    pos: pos,
+                    sprite: <span class="hljs-keyword">new</span> Sprite(<span class="hljs-string">'img/sprites.png'</span>,
+                                       [<span class="hljs-number">0</span>, <span class="hljs-number">117</span>],
+                                       [<span class="hljs-number">39</span>, <span class="hljs-number">39</span>],
+                                       <span class="hljs-number">16</span>,
+                                       [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>, <span class="hljs-number">11</span>, <span class="hljs-number">12</span>],
+                                       <span class="hljs-literal">null</span>,
+                                       <span class="hljs-literal">true</span>)
+                });
+
+                <span class="hljs-comment">// Remove the bullet and stop this iteration</span>
+                bullets.splice(j, <span class="hljs-number">1</span>);
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+
+        <span class="hljs-keyword">if</span>(boxCollides(pos, size, player.pos, player.sprite.size)) {
+            gameOver();
+        }
+    }
+}
+</code></pre>
+
+<p id="p101">Collision detection is inherently exponential because you need to check collisions between all entities in the scene. For our game, we need to check every single enemy against every single bullet. The code loops through the <code>enemies</code> array and checks each enemy against all bullets by looping over the <code>bullets</code> array.</p>
+
+<p id="p102">It calls <code>boxCollides</code> with the enemy and bullet's position and size (which is just the size of the sprite), and if it returns true does the following:</p>
+
+<ol>
+<li id="li11">Removes the enemy</li>
+<li id="li12">Adds to the score</li>
+<li id="li13">Adds an explosion entity</li>
+<li id="li14">Removes the bullet</li>
+<li id="li15">Stops the inner loop over bullets because the enemy doesn't exist anymore</li>
+</ol>
+
+<p id="p103">We use the array splicing technique again to remove entities from an array. Again, this isn't a best practice, and it's better to mark enemies for removal and do it later, but this keeps the code simple.</p>
+
+<p id="p104">Note how we create an explosion. You should be use to this pattern by now. We create an object with <code>pos</code> and <code>sprite</code> properties, and the sprite maps to the 13 frames of animation in the sprite map. Note that we pass <code>true</code> as the last argument which says to run the animation only once. The <code>update</code> loop <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L152">checks for explosions that have finished and removes them</a>.</p>
+
+<p id="p105">Note these 3 lines of the <code>checkCollisions</code> function at the end of the loop over <code>enemies</code>:</p>
+
+<pre><code class="javascript hljs"><span class="hljs-keyword">if</span>(boxCollides(pos, size, player.pos, player.sprite.size)) {
+    gameOver();
+}
+</code></pre>
+
+<p id="p106"><code>pos</code> and <code>size</code> are the position and size of the current enemy being checked, so this checks if the enemy has collided with the player. If it has, it signals a game over.</p>
+
+<p id="p107">Lastly, let's talk about <code>checkPlayerBounds</code>. Here's what it looks like:</p>
+
+<pre><code class="javascript hljs"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkPlayerBounds</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-comment">// Check bounds</span>
+    <span class="hljs-keyword">if</span>(player.pos[<span class="hljs-number">0</span>] &lt; <span class="hljs-number">0</span>) {
+        player.pos[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(player.pos[<span class="hljs-number">0</span>] &gt; canvas.width - player.sprite.size[<span class="hljs-number">0</span>]) {
+        player.pos[<span class="hljs-number">0</span>] = canvas.width - player.sprite.size[<span class="hljs-number">0</span>];
+    }
+
+    <span class="hljs-keyword">if</span>(player.pos[<span class="hljs-number">1</span>] &lt; <span class="hljs-number">0</span>) {
+        player.pos[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(player.pos[<span class="hljs-number">1</span>] &gt; canvas.height - player.sprite.size[<span class="hljs-number">1</span>]) {
+        player.pos[<span class="hljs-number">1</span>] = canvas.height - player.sprite.size[<span class="hljs-number">1</span>];
+    }
+}
+</code></pre>
+
+<p id="p108">It simply keeps the player inside the boundaries of the game by forcing it's x and y coordinates to be between 0 and <code>canvas.width</code>/<code>canvas.height</code>.</p>
+
+<h2 id="Rendering">Rendering<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Rendering" class="text-anchor">#</a></h2>
+
+<p id="p109">We are almost done! We just need to define the <code>render</code> function which is called by our game loop to render the scene each frame. Here's what it looks like:</p>
+
+<pre><code class="javascript hljs"><span class="hljs-comment">// Draw everything</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render</span><span class="hljs-params">()</span> </span>{
+    ctx.fillStyle = terrainPattern;
+    ctx.fillRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, canvas.width, canvas.height);
+
+    <span class="hljs-comment">// Render the player if the game isn't over</span>
+    <span class="hljs-keyword">if</span>(!isGameOver) {
+        renderEntity(player);
+    }
+
+    renderEntities(bullets);
+    renderEntities(enemies);
+    renderEntities(explosions);
+};
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderEntities</span><span class="hljs-params">(list)</span> </span>{
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;list.length; i++) {
+        renderEntity(list[i]);
+    }    
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderEntity</span><span class="hljs-params">(entity)</span> </span>{
+    ctx.save();
+    ctx.translate(entity.pos[<span class="hljs-number">0</span>], entity.pos[<span class="hljs-number">1</span>]);
+    entity.sprite.render(ctx);
+    ctx.restore();
+}
+</code></pre>
+
+<p id="p110">The first thing we do is render the background. We <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L36">created the terrain pattern in the <code>init</code> function</a> using the <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dfnReturnLink-1"><code>ctx.createPattern</code></a> function, and we render it by setting the <code>fillStyle</code> of the context and rendering to the whole canvas with <code>fillRect</code>.</p>
+
+<p id="p111">We then render the player, all bullets, all enemies, and all explosions. <code>renderEntities</code> loops through an array of entities and renders them. <code>renderEntity</code> uses canvas' <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#transformations">transformations</a> to place it on the screen. <code>ctx.save</code> saves the current transformation and <code>ctx.restore</code> restores it, obviously.</p>
+
+<p id="p112">If you look back the <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/sprite.js#L47">sprite's render function</a>, you'll see that it renders it at (0, 0), but our call to <code>ctx.translate</code> transforms it to the right place on the screen.</p>
+
+<h2 id="Game-Over">Game Over<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Game-Over" class="text-anchor">#</a></h2>
+
+<p id="p113">The last little bit we need to do is handle the game over state. We need to define a <code>gameOver</code> function that shows a game over screen, and also <code>reset</code> which restarts the game.</p>
+
+<pre><code class="javascript hljs"><span class="hljs-comment">// Game over</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">gameOver</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'game-over'</span>).style.display = <span class="hljs-string">'block'</span>;
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'game-over-overlay'</span>).style.display = <span class="hljs-string">'block'</span>;
+    isGameOver = <span class="hljs-literal">true</span>;
+}
+
+<span class="hljs-comment">// Reset game to original state</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">reset</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'game-over'</span>).style.display = <span class="hljs-string">'none'</span>;
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'game-over-overlay'</span>).style.display = <span class="hljs-string">'none'</span>;
+    isGameOver = <span class="hljs-literal">false</span>;
+    gameTime = <span class="hljs-number">0</span>;
+    score = <span class="hljs-number">0</span>;
+
+    enemies = [];
+    bullets = [];
+
+    player.pos = [<span class="hljs-number">50</span>, canvas.height / <span class="hljs-number">2</span>];
+};
+</code></pre>
+
+<p id="p114"><code>gameOver</code> displays the screen defined in <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/index.html"><code>index.html</code></a> which says "Game Over" and has a button to restart.</p>
+
+<p id="p115"><code>reset</code> sets all the game state back to the beginning and hides the game over screen, effectively restarting the game.</p>
+
+<p id="p116">Note that <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L38">back in <code>init</code></a> an event handler was added to the "play again" button shown in the game over screen which calls <code>reset</code>. </p>
+
+<h2 id="Making-it-Pretty">Making it Pretty<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Making-it-Pretty" class="text-anchor">#</a></h2>
+
+<p id="p117">There's a <a href="https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/css/app.css">tiny amount of css</a> which centers the canvas, darkens the background, and styles the game over screen and other components.</p>
+
+<p id="p118">Ideally you would scale the width and height of the canvas up if the game is being played on a larger screen. I will show how to do that in a future blog post.</p>
+
+<h2 id="Adding-Sounds">Adding Sounds<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Adding-Sounds" class="text-anchor">#</a></h2>
+
+<p id="p119">This article focuses on rendering games with canvas, and skips over audio integration. I won't go into detail about it, but I'll point you to some resources to help you integrate sounds. The <a href="https://developer.mozilla.org/en-US/docs/HTML/Element/audio"><code>audio</code></a> tag exists, of course, but for games we really need an API to play multiple sounds at once and have fine-grained control over them.</p>
+
+<p id="p120">The web is slowly converging on the <a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">Web Audio API</a> which provides advanced audio manipulation (as of June 2013). As of right now, only Chrome and Safari implement it, but Firefox and Opera should be getting it in the next version. This is a huge deal, as it has taken years to get good cross-browser audio support. Firefox has had the <a href="https://wiki.mozilla.org/Audio_Data_API">Audio Data API</a> for a long time, but it failed to gain traction.</p>
+
+<p id="p121"><a href="http://www.html5rocks.com/en/tutorials/webaudio/intro/">This article</a> is a great intro to the Web Audio API. If you want to support older Firefox browsers (older than version 22), you'll have to add Audio Data API support as well as Web Audio. <a href="https://wiki.mozilla.org/Audio_Data_API">This page</a> has several examples of the Audio Data API. </p>
+
+<p id="p122">Eventually the <a href="https://github.com/jlongster/canvas-game-bootstrap/">game bootstrap</a> project will include sample code for audio integration. I plan on writing another post detailing sound and other improvements to the game engine.</p>
+
+<p id="p123">IE is the only one that doesn't provide an advanced audio API, as far as I know.</p>
+
+<h2 id="Final-Thoughts">Final Thoughts<a href="http://jlongster.com/Making-Sprite-based-Games-with-Canvas#Final-Thoughts" class="text-anchor">#</a></h2>
+
+<p id="p124">There's a lot to learn here, but I hope I've broken it down to simple enough pieces to show that making games is not that crazy. It just takes time to learn all the pieces needed. Please leave questions in the comments and I'd be happy to answer them!</p>
+
+<p id="p125">I focused on using the raw canvas API to shine some light on how easy it is to create 2d games in the browser these days. Of course, there are <a href="https://www.google.com/search?hl=en&q=javascript+game+engine&oq=javascript+game+engine&gs_l=serp.12..0j0i7l2j0j0i7l6.13246.13246.0.13920.1.1.0.0.0.0.167.167.0j1.1.0.les%3Bckwqrh..0.0...1..5.serp.qmeKhSoA9fA">several game engines</a> that you can use if you want to get really complex. Most game engines standardize the interface for an entity, so all you have to do is define an <code>update</code> and <code>render</code> function for each type and a scene manager automatically calls them for all entities each frame.</p>
+
+<p id="p126">Hey <em>you</em>, go create games like <a href="http://jlongster.github.com/canvas-game-bootstrap/">our example game</a>!</p></div><div class="tags" data-reactid=".2eo18ixgt1c.1.1.1.1:2.4"><a href="http://jlongster.com/tag/games" data-reactid=".2eo18ixgt1c.1.1.1.1:2.4.0">games</a><a href="http://jlongster.com/tag/noteworthy" data-reactid=".2eo18ixgt1c.1.1.1.1:2.4.1">noteworthy</a></div></article></div></main><div class="additional-footer" data-reactid=".2eo18ixgt1c.1.2"><div class="additional-footer-inner-ugh" data-reactid=".2eo18ixgt1c.1.2.0"><div class="meta" data-reactid=".2eo18ixgt1c.1.2.0.0"><div class="comments" data-reactid=".2eo18ixgt1c.1.2.0.0.0"><a href="https://twitter.com/jlongster" data-reactid=".2eo18ixgt1c.1.2.0.0.0.0">Tweet at me</a><span data-reactid=".2eo18ixgt1c.1.2.0.0.0.1"> to tell me what you love about this.</span></div><div class="social" data-reactid=".2eo18ixgt1c.1.2.0.0.1">
+<div class="twitter">
+  <iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" src="./Making Sprite-based Games with Canvas_files/tweet_button.26f01cfa05bff9af89657dcbd8f7b705.en.html" class="twitter-share-button twitter-tweet-button twitter-share-button twitter-count-horizontal" title="Twitter Tweet Button" data-twttr-rendered="true" style="width: 107px; height: 20px;"></iframe>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+
+<div class="hn">
+  <iframe src="./Making Sprite-based Games with Canvas_files/button.html" scrolling="auto" frameborder="0" width="75px" height="20px" class="hn-share-iframe"></iframe>
+  <script src="./Making Sprite-based Games with Canvas_files/hn.min.js" async="" defer=""></script>
+</div>
+</div></div><div class="readnext" data-reactid=".2eo18ixgt1c.1.2.0.1"><h3 data-reactid=".2eo18ixgt1c.1.2.0.1.0"><span data-reactid=".2eo18ixgt1c.1.2.0.1.0.0">Read Next: </span><a href="http://jlongster.com/Reflections-on-My-Game-Off-Experience" data-reactid=".2eo18ixgt1c.1.2.0.1.0.1">Reflections on My Game Off Experience</a></h3><p data-reactid=".2eo18ixgt1c.1.2.0.1.1">After an intense few weeks building a multiplayer first person shooter on the web, I take a look at what I achieved and what I did wrong.</p></div></div></div><footer data-reactid=".2eo18ixgt1c.1.3"><div class="footer-wrapper" data-reactid=".2eo18ixgt1c.1.3.1"><div class="footer-text" data-reactid=".2eo18ixgt1c.1.3.1.0"><p data-reactid=".2eo18ixgt1c.1.3.1.0.0"><span data-reactid=".2eo18ixgt1c.1.3.1.0.0.0">Written by </span><a href="https://twitter.com/jlongster" data-reactid=".2eo18ixgt1c.1.3.1.0.0.1">James Long</a><span data-reactid=".2eo18ixgt1c.1.3.1.0.0.2">, a developer for Mozilla. </span><a href="mailto:longster@gmail.com" data-reactid=".2eo18ixgt1c.1.3.1.0.0.3">Get in touch</a><span data-reactid=".2eo18ixgt1c.1.3.1.0.0.4">.</span></p></div></div></footer></div></div></div>
+    <script id="payload" type="application/payload">{"data":{"post":{"post":{"published":true,"title":"Making Sprite-based Games with Canvas","updatedDate":"20130602","shorturl":"Making-Sprite-based-Games-with-Canvas","tags":["games","noteworthy"],"abstract":"This article explores the process of creating a sprite-based game for the web using canvas. It provides an in-depth explanation of sprite animations, collisions, and much more.","content":"The web is everywhere, and offers a very powerful and non-traditional environment for creating and distributing apps. Instead of the code-compile-run cycle, simply refresh your app or even write code live within the browser. Additionally, it's relatively painless to distribute your app across a huge number of platforms. It's exciting that in the past few years, developing games using HTML5, the technology behind the web, has become a reality.\n\nThe [canvas element](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html) was introduced with [HTML5](http://en.wikipedia.org/wiki/HTML5) and provides an API for rendering on the web. The API is simple, but if you've never done graphics work before it might take some getting used to. It has great [cross-browser support](http://caniuse.com/#feat=canvas) at this point, and it makes the web a viable platform for games.\n\nUsing canvas is simple: just create a `&lt;canvas&gt;` tag, create a rendering context from it in javascript, and use methods like `fillRect` and `drawImage` on the context to render shapes and images. The [API](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html) has a lot of methods for rendering arbitrary paths, applying transformations, and more.\n\nIn this article, we're going to create a 2d game with canvas; a real game with sprites, animations, collision detection, and of course, explosions! What's a game without explosions?\n\nThis is the game we're going to make ([play it here](http://jlongster.github.com/canvas-game-bootstrap/)). I wrapped this up into a [game bootstrap](https://github.com/jlongster/canvas-game-bootstrap) project that you can use to quickly get started. I recomend checking out the source and running it locally by opening `index.html`.\n\n[![](http://jlongster.com/s/canvas-tutorial/screenshot.png)](http://jlongster.github.com/canvas-game-bootstrap/)\n\n## Gearing Up\n\nThe game might look complex, but it really just boils down to a few technical components. I've always been amazed how far you can go with canvas, simple collision detection, some sprites, and a game loop.\n\nHowever, in order to focus on the game components, I'm not going to fully explain every single line of code and API call. This tutorial is going to be somewhat advanced, but I hope that it's clear enough so that people of all skill levels can follow along. It's meant to explain basic game concepts, with a few more advanced techniques like sprite animations mixed in. This article assumes that you are familiar with JavaScript and basic HTML APIs. It also skims over the canvas API and some basic game concepts like the game loop.\n\nFor a more basic tutorial, check out [How to make a simple HTML5 Canvas Game](http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/) and [HTML5 Snake source code walkthrough](http://jdstraughan.com/2013/03/05/html5-snake-with-source-code-walkthrough/).\n\n### Using Free Graphics\n\nIt really sucks to try to make games for the first few times, because there's a lot to learn and you don't have any time to make cool graphics. I highly recommend using a free set of graphics until you have time to make your own.\n\n[HasGraphics](http://hasgraphics.com/) is an awesome place to find free 2d graphics. I'm using the [Hard Vacuum](http://www.lostgarden.com/2005/03/game-post-mortem-hard-vacuum.html) set for this example game.\n\nYou also learn how real graphics are stored and how to work with them. In this tutorial I will show how I integrated them.\n\n## Creating the Canvas\n\nLet's start by digging into the code. Most of the game is in [app.js](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js) in the `js` directory.\n\nThe very first thing we do is create the canvas tag, set the width and height, and add it to the `body` tag. We do this dynamically to keep everything in javascript, but you could add a `canvas` tag in the HTML file and use something like `getElementById` to get it too. There's no difference between these two methods, it's just a matter of preference where the canvas element is created.\n\n```js\n// Create the canvas\nvar canvas = document.createElement(\"canvas\");\nvar ctx = canvas.getContext(\"2d\");\ncanvas.width = 512;\ncanvas.height = 480;\ndocument.body.appendChild(canvas);\n```\n\nThe `canvas` element has a `getContext` method which is what you use to get the rendering context. The context is the object on which you call all of the rendering APIs. You can also pass `webgl` if you want a [WebGL](https://developer.mozilla.org/en-US/docs/WebGL) context for 3d scenes.\n\nFrom here on, we will be using the `ctx` variable to render everything.\n\n## Game Loop\n\nYou need a game loop that continually updates and renders the game. [Here's what it looks like](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L22):\n\n```js\n// The main game loop\nvar lastTime;\nfunction main() {\n    var now = Date.now();\n    var dt = (now - lastTime) / 1000.0;\n\n    update(dt);\n    render();\n\n    lastTime = now;\n    requestAnimFrame(main);\n};\n```\n\nYou update and render the scene, and then use [requestAnimationFrame](http://paulirish.com/2011/requestanimationframe-for-smart-animating/) to queue up the next loop. It's basically a smarter way of saying `setTimeout(main, 1000 / 60)`, which attempts to render a 60 frames/second. At the [very top](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L2) of app.js we shim rAF as the `requestAnimFrame` function since [not all browsers](http://caniuse.com/#feat=requestanimationframe) support it yet.\n\n**Never *ever*** use `setTimeout(main, 1000 / 60)`, as it's less accurate and also wastes a lot of cycles by rendering when unnecessary.\n\nThe `update` function takes the time that has changed since the last update. **Never** update your scene with constant values per frame (like `x += 5;`). Your game will run wildly different on various computers and platforms, so you need to update your scene independently of framerate.\n\nThis is achieved by calculating the time since last update (in seconds), and expressing all movements in pixels/second units. Movement then becomes `x += 50 * dt`, or \"50 pixels per second\".\n\n## Loading Resources and Starting the Game\n\nThe next section of code initializes the game and loads all resources. This uses one of the few separate utility classes that I wrote, [resources.js](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/resources.js). It's a very simple library that loads images and fires an event when they are all loaded.\n\nGames require a lot of assets, like images, scene data, and so on. For 2d games, most or all of the assets are images. You need to load all your assets before starting the game so that they can be immediately used.\n\nIt's easy to load an image in javascript and do something when it's available:\n\n```js\nvar img = new Image();\nimg.onload = function() {\n    startGame();\n};\nimg.src = url;\n```\n\nThis gets really tedious though if you have several images to load. You need to make a bunch of global variables, and in each `onload` check if all of them are loaded. I wrote a basic resource loader to handle all of this automatically. Get ready for some code!\n\n```js\n\n(function() {\n    var resourceCache = {};\n    var loading = [];\n    var readyCallbacks = [];\n\n    // Load an image url or an array of image urls\n    function load(urlOrArr) {\n        if(urlOrArr instanceof Array) {\n            urlOrArr.forEach(function(url) {\n                _load(url);\n            });\n        }\n        else {\n            _load(urlOrArr);\n        }\n    }\n\n    function _load(url) {\n        if(resourceCache[url]) {\n            return resourceCache[url];\n        }\n        else {\n            var img = new Image();\n            img.onload = function() {\n                resourceCache[url] = img;\n                \n                if(isReady()) {\n                    readyCallbacks.forEach(function(func) { func(); });\n                }\n            };\n            resourceCache[url] = false;\n            img.src = url;\n        }\n    }\n\n    function get(url) {\n        return resourceCache[url];\n    }\n\n    function isReady() {\n        var ready = true;\n        for(var k in resourceCache) {\n            if(resourceCache.hasOwnProperty(k) &amp;&amp;\n               !resourceCache[k]) {\n                ready = false;\n            }\n        }\n        return ready;\n    }\n\n    function onReady(func) {\n        readyCallbacks.push(func);\n    }\n\n    window.resources = { \n        load: load,\n        get: get,\n        onReady: onReady,\n        isReady: isReady\n    };\n})();\n```\n\nThe way this works is your game calls `resources.load` with all the images to load, and then calls `resources.onReady` to register a callback for when everything is loaded. This assumes that you won't call `resources.load` later in the game; it only works at startup.\n\nIt keeps a cache of images in `resourceCache`, and when the image loads it checks to see if all the requested images have loaded, and if so calls all the registered callbacks. Now we can just do this in our game:\n\n```js\nresources.load([\n    'img/sprites.png',\n    'img/terrain.png'\n]);\nresources.onReady(init);\n```\n\nTo get an image once the game starts, we just do `resources.get('img/sprites.png')`. Easy!\n\nYou can manually load images and start the game or use something like [resources.js](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/resources.js) to make it easier.\n\nIn the above code, [`init`](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L35) is called when all the images are loaded, which creates the background pattern, hooks up the \"Play Again\" button, resets the game state, and starts the game.\n\n```js\nfunction init() {\n    terrainPattern = ctx.createPattern(resources.get('img/terrain.png'), 'repeat');\n\n    document.getElementById('play-again').addEventListener('click', function() {\n        reset();\n    });\n\n    reset();\n    lastTime = Date.now();\n    main();\n}\n```\n\n## Game State\n\nNow we're rolling! Let's start implementing some game logic. At the core of every game is *game state*. This is data that represents the current state: a list of objects in the scene with position and other info, current score, time since the player last fired, and anything else.\n\nThis is all of the game state for our game:\n\n```js\n// Game state\nvar player = {\n    pos: [0, 0],\n    sprite: new Sprite('img/sprites.png', [0, 0], [39, 39], 16, [0, 1])\n};\n\nvar bullets = [];\nvar enemies = [];\nvar explosions = [];\n\nvar lastFire = Date.now();\nvar gameTime = 0;\nvar isGameOver;\nvar terrainPattern;\n\n// The score\nvar score = 0;\nvar scoreEl = document.getElementById('score');\n\n```\n\nThis looks like a lot, but it's not that complicated. Most of it is keeping track of when the player last fired a bullet (`lastFire`), how long the game has been playing (`gameTime`), if the game is over (`isGameOver`), the terrain pattern image (`terrainPattern`), and the score (`score`). There's also a list of objects in the scene: bullets, enemies, and explosions.\n\nThere's also the `player` entity, which keeps track of where the player is and the sprite state. Before we move on in the code, let's talk about entities and sprites. \n\n## Entities &amp; Sprites\n\n### Entities\n\nAn \"entity\" is an object in the scene. Anything from a ship to a bullet to an explosion is an entity.\n\nEntities in this system are simple javascript objects which keep track of where they are in the scene and more. This is a pretty simple system where we are manually handling each entity type, so there isn't any enforced structure. Each of our entities has `pos` and `sprite` field, and possibly more. For example, if we wanted to add an enemy to our scene, we would do:\n\n```js\nenemies.push({\n    pos: [100, 50],\n    sprite: new Sprite(/* sprite parameters */)\n});\n```\n\nThis adds an enemy at x=100 and y=50 with the specified sprite.\n\n&lt;a id=\"sprites\"&gt;&lt;/a&gt;\n### Sprites &amp; Animation\n\nA \"sprite\" is an image that is rendered to represent an entity. Sprites are more complex because we want to animate them. Without animation, sprites could be simple images that are rendered with [`ctx.drawImage`](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage).\n\nAnimations are critical to a fun experience though, so it's really important that we implement it.\n\nWe can implement animations by loading several images and flipping through them over time. This is called keyframe animation.\n\n![](http://jlongster.com/s/canvas-tutorial/frames.png)\n\nIf we alternate through these images back and forth, this is what it looks like:\n\n![](http://jlongster.com/s/canvas-tutorial/test.gif)\n\nIn order to make it easier to edit each keyframe and load them, these images are commonly put all into one image, called a sprite map. You may already be familiar with this technique [in CSS](http://davidwalsh.name/firefox-animation). In fact, many times *several* different sprite animations are contained in a single sprite map. Here's the sprite map for our example game (with a transparent background):\n\n![](http://jlongster.com/s/canvas-tutorial/sprites.png)\n\nLike I mentioned at the beginning of this tutorial, I'm using the [Hard Vacuum](http://www.lostgarden.com/2005/03/game-post-mortem-hard-vacuum.html) set of graphics. The set is a just bunch of `bmp` files, so I copied the individual graphics I needed and pasted them into a single sprite sheet. You'll need a simple graphics editor to do this (anything that can move pixels around should work). If you don't have one, you'll have to work with the existing formats and possibly change how the sprite animations load them. You could also find a different set or work with simple colored rectangles.\n\nIt would be difficult to manage all of these animations manually, however. This is where the second utility class comes in: [sprite.js](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/sprite.js). This is a small file that wraps up the animation logic into a reusable type. Let's dig into it.\n\n```js\nfunction Sprite(url, pos, size, speed, frames, dir, once) {\n    this.pos = pos;\n    this.size = size;\n    this.speed = typeof speed === 'number' ? speed : 0;\n    this.frames = frames;\n    this._index = 0;\n    this.url = url;\n    this.dir = dir || 'horizontal';\n    this.once = once;\n};\n```\n\nThis is the constructor for the `Sprite` class. It takes quite a number of arguments, but not all of them are required. Let's go through them one by one:\n\n* `url`: the path to the image for this sprite\n* `pos`: the x and y coordinate in the image for this sprite\n* `size`: size of the sprite (just one keyframe)\n* `speed`: speed in frames/sec for animating\n* `frames`: an array of frame indexes for animating: [0, 1, 2, 1]\n* `dir`: which direction to move in the sprite map when animating: 'horizontal' (default) or 'vertical'\n* `once`: `true` to only run the animation once, defaults to `false`\n\nThe `frames` argument might need more explanation. The system assumes that all frames of an animation are the same size (the size passed in above). When animating, the system simply walks through the sprite map either horizontally or vertically (depending on `dir`) by starting at `pos` and incrementing by the x or y value of `size`. You need to specify `frames` to tell it *how* to walk, though, and each number references the frame to use. So `[0, 1, 2, 3, 2, 1]` would animate to the end and then reverse to the beginning.\n\nOnly `url`, `pos`, and `size` are required, since you might not need animation.\n\nEvery `Sprite` object has an [`update`](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/sprite.js#L15) method for updating the animation, and it takes the length of time since last update just like our global update. Every sprite needs to be updated each frame.\n\n```js\nSprite.prototype.update = function(dt) {\n    this._index += this.speed*dt;\n}\n```\n\nEvery `Sprite` object also has a [`render`](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/sprite.js#L19) method for actually drawing itself. This is where most of the animation logic lives. It checks to see which frame it should render, calculates the coordinates within the sprite map, and calls [`ctx.drawImage`](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage) to draw it.\n\n```js\nSprite.prototype.render = function(ctx) {\n    var frame;\n\n    if(this.speed &gt; 0) {\n        var max = this.frames.length;\n        var idx = Math.floor(this._index);\n        frame = this.frames[idx % max];\n\n        if(this.once &amp;&amp; idx &gt;= max) {\n            this.done = true;\n            return;\n        }\n    }\n    else {\n        frame = 0;\n    }\n\n\n    var x = this.pos[0];\n    var y = this.pos[1];\n\n    if(this.dir == 'vertical') {\n        y += frame * this.size[1];\n    }\n    else {\n        x += frame * this.size[0];\n    }\n\n    ctx.drawImage(resources.get(this.url),\n                  x, y,\n                  this.size[0], this.size[1],\n                  0, 0,\n                  this.size[0], this.size[1]);\n}\n```\n\nWe use the 3rd form of [`drawImage`](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage) which lets us specify an offset and size for the sprite and the destination separately.\n\n## Updating the Scene\n\nRemember back in our game loop when we called `update(dt)` every frame? We need to define that function now, which needs to handle input, update all the sprites, update the positions of entities, and handle collision.\n\n```js\nfunction update(dt) {\n    gameTime += dt;\n\n    handleInput(dt);\n    updateEntities(dt);\n\n    // It gets harder over time by adding enemies using this\n    // equation: 1-.993^gameTime\n    if(Math.random() &lt; 1 - Math.pow(.993, gameTime)) {\n        enemies.push({\n            pos: [canvas.width,\n                  Math.random() * (canvas.height - 39)],\n            sprite: new Sprite('img/sprites.png', [0, 78], [80, 39],\n                               6, [0, 1, 2, 3, 2, 1])\n        });\n    }\n\n    checkCollisions();\n\n    scoreEl.innerHTML = score;\n};\n```\n\nNote how we add new enemies to the scene. We add an enemy if a random value is lower then a threshold, and it's added at the right side of the game just outside the view. It is randomly placed on the y axis by multiplying a random value by the canvas height minus the height of the enemy, so that the bottom doesn't cut any off. The value `39` is hardcoded because we know that's the height of the sprite. This code is simpler for the sake of the tutorial.\n\nThe threshold increases over time with the function [`1 - Math.pow(.993, gameTime)`](https://www.google.com/search?hl=en&amp;site=&amp;source=hp&amp;q=1-.993^x&amp;oq=1-.993^x&amp;gs_l=hp.3...1436.6047.0.6566.8.8.0.0.0.0.264.874.4j3j1.8.0.les%3B..0.0...1c.1.5.hp.xQBpEcL-gyQ). `Math.random` returns a value between 0 and 1, and that function is about .13 at 20 seconds into the game, and slowly increases according to an exponential curve. The game is probably way too hard but it's illustrative.  \n\n### Input\n\nTo handle input, I create one more utility library: [input.js](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/input.js). This is very small library that simply keeps the state of the currently pressed keys by adding keydown and keyup event handlers to the document. I don't think it's worth posting here, but please go [check it out](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/input.js) on github.\n\nThe input library exports one single function, `input.isDown`, which takes a character such as `'a'` and returns true if it's currently pressed. You can also pass `'SPACE'`, `'LEFT'`, `'UP'` , `'RIGHT'`, and `'DOWN'`.\n\nNow we can handle input like this:\n\n```js\nfunction handleInput(dt) {\n    if(input.isDown('DOWN') || input.isDown('s')) {\n        player.pos[1] += playerSpeed * dt;\n    }\n\n    if(input.isDown('UP') || input.isDown('w')) {\n        player.pos[1] -= playerSpeed * dt;\n    }\n\n    if(input.isDown('LEFT') || input.isDown('a')) {\n        player.pos[0] -= playerSpeed * dt;\n    }\n\n    if(input.isDown('RIGHT') || input.isDown('d')) {\n        player.pos[0] += playerSpeed * dt;\n    }\n\n    if(input.isDown('SPACE') &amp;&amp;\n       !isGameOver &amp;&amp;\n       Date.now() - lastFire &gt; 100) {\n        var x = player.pos[0] + player.sprite.size[0] / 2;\n        var y = player.pos[1] + player.sprite.size[1] / 2;\n\n        bullets.push({ pos: [x, y],\n                       dir: 'forward',\n                       sprite: new Sprite('img/sprites.png', [0, 39], [18, 8]) });\n        bullets.push({ pos: [x, y],\n                       dir: 'up',\n                       sprite: new Sprite('img/sprites.png', [0, 50], [9, 5]) });\n        bullets.push({ pos: [x, y],\n                       dir: 'down',\n                       sprite: new Sprite('img/sprites.png', [0, 60], [9, 5]) });\n\n\n        lastFire = Date.now();\n    }\n}\n```\n\nIf the user presses the down arrow or the 's' key, we move the player up the y axis. The canvas coordinate system places (0, 0) at the top left, so moving up the y axis moves the object down the screen. We do the same for the up, left, and right keys.\n\nNotice that we defined the `playerSpeed` variable at the [top of app.js](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L71). Here are the speeds we defined:\n\n```js\n// Speed in pixels per second\nvar playerSpeed = 200;\nvar bulletSpeed = 500;\nvar enemySpeed = 100;\n```\n\nBy multiplying `playerSpeed` by the `dt` parameter, we calculate the correct amount of pixels to move for that frame. If 1 second has passed since that last update (which is the `dt` parameter), the player would move 200 pixels. If .5 seconds have passed, he would move 100 pixels. This shows a constant rate of movement independant of framerate.\n\nThe last thing we do is fire a bullet if the space button is pressed, the game isn't over, and it's been more than 100 milliseconds since the last bullet was fired. `lastFire` is a global variable that is part of the game state. It helps us control the rate of fire; otherwise the player could fire a bullet *every frame*! That's a little too easy, right?\n\n```js\nvar x = player.pos[0] + player.sprite.size[0] / 2;\nvar y = player.pos[1] + player.sprite.size[1] / 2;\n\nbullets.push({ pos: [x, y],\n               dir: 'forward',\n               sprite: new Sprite('img/sprites.png', [0, 39], [18, 8]) });\nbullets.push({ pos: [x, y],\n               dir: 'up',\n               sprite: new Sprite('img/sprites.png', [0, 50], [9, 5]) });\nbullets.push({ pos: [x, y],\n               dir: 'down',\n               sprite: new Sprite('img/sprites.png', [0, 60], [9, 5]) });\n\nlastFire = Date.now();\n\n```\n\nIf we are firing a bullet, we add 3 bullet entities to the scene. The `bullets` array keeps track of all the bullets to the scene, so it's as simple as pushing them on there.\n\nWe calculate the position of the new bullets in the `x` and `y` variables. We add them at the position of the player, plus half the width and height of the player so that they shoot from the center of the ship.\n\n![](http://jlongster.com/s/canvas-tutorial/ship-bullets.png)\n\nWe add 3 bullets because they shoot out from different directions. This makes the game easier because the player can't get \"trapped\" horizontally when they are lots of ships. To differentiate the types of bullets, we add a `dir` property to the entity with a value of `'forward'`, `'up'`, or `'down'`.\n\n### Entities\n\nAll of the entities need to be updated. We have the single player entity and 3 arrays for bullets, enemies, and explosions.\n\n```js\nfunction updateEntities(dt) {\n    // Update the player sprite animation\n    player.sprite.update(dt);\n\n    // Update all the bullets\n    for(var i=0; i&lt;bullets.length; i++) {\n        var bullet = bullets[i];\n\n        switch(bullet.dir) {\n        case 'up': bullet.pos[1] -= bulletSpeed * dt; break;\n        case 'down': bullet.pos[1] += bulletSpeed * dt; break;\n        default:\n            bullet.pos[0] += bulletSpeed * dt;\n        }\n\n        // Remove the bullet if it goes offscreen\n        if(bullet.pos[1] &lt; 0 || bullet.pos[1] &gt; canvas.height ||\n           bullet.pos[0] &gt; canvas.width) {\n            bullets.splice(i, 1);\n            i--;\n        }\n    }\n\n    // Update all the enemies\n    for(var i=0; i&lt;enemies.length; i++) {\n        enemies[i].pos[0] -= enemySpeed * dt;\n        enemies[i].sprite.update(dt);\n\n        // Remove if offscreen\n        if(enemies[i].pos[0] + enemies[i].sprite.size[0] &lt; 0) {\n            enemies.splice(i, 1);\n            i--;\n        }\n    }\n\n    // Update all the explosions\n    for(var i=0; i&lt;explosions.length; i++) {\n        explosions[i].sprite.update(dt);\n\n        // Remove if animation is done\n        if(explosions[i].sprite.done) {\n            explosions.splice(i, 1);\n            i--;\n        }\n    }\n}\n```\n\nLet's start at the top: the player's sprite is updated by simply calling the `update` function on the sprite. This moves the animation forward.\n\nThe next 3 loops go through the individual bullets, enemies, and explosions. The process is the same for all of them: update the sprite, update the movement, and possibly remove it if it's offscreen. Since all entities can never change direction, there's no need to keep them in the scene when they move off, and it would only slow down our game the longer it is played.\n\nThe bullet's movement is the most complicated:\n\n```js\nswitch(bullet.dir) {\ncase 'up': bullet.pos[1] -= bulletSpeed * dt; break;\ncase 'down': bullet.pos[1] += bulletSpeed * dt; break;\ndefault:\n    bullet.pos[0] += bulletSpeed * dt;\n}\n```\n\nIf `bullet.dir` is `'up'`, we move the bullet down the y-axis (which moves it up the screen). The opposite for `'down'`, and the default case is to move forward along the x axis.\n\n```js\n// Remove the bullet if it goes offscreen\nif(bullet.pos[1] &lt; 0 || bullet.pos[1] &gt; canvas.height ||\n   bullet.pos[0] &gt; canvas.width) {\n    bullets.splice(i, 1);\n    i--;\n}\n```\n\nThen we check to see if we should remove the bullet. The position is checked against the top, right, and bottom sides because bullets move up, right, and down. We don't make sure the whole bullet sprite is offscreen because the bullets move fast enough not to master. Simply checking the position (which is the top-left corner of the sprite) is enough.\n\nTo remove the bullet, we destructively modify the `bullets` array and decrement the `i` in the loop since the array has been modified. If we didn't do this, the next bullet would be skipped.\n\n(Note: I wouldn't consider this a \"best practice\"; it's best to mark which ones need to be removed and remove them later. This fixes a lot of potential bugs with syncing issues, but for this tutorial we are keeping it simple. The right way to do it is to mark the object to be removed by setting a property like “toRemove” on it, and removing all the objects in a separate pass in the `update` method.)\n\n### Collision Detection\n\nNow for something that everybody fears: collision detection! It's actually not as hard as it sounds, at least for our 2d game. It would be hard if we had to *resolve* collisions.\n\nResolving a collision means that you move one or both objects so that they are not colliding anymore. You need this for platformers where the player can run into a wall and the wall pushes back to stop him. For our game, we just need to make things explode!\n\nThere are 3 types of collisions we need to check:\n\n1. Enemies hit by bullets\n2. The player hit by an enemy\n3. The player hits the edge of the screen\n\nDetecting 2d collisions is simple:\n\n```js\nfunction collides(x, y, r, b, x2, y2, r2, b2) {\n    return !(r &lt;= x2 || x &gt; r2 ||\n             b &lt;= y2 || y &gt; b2);\n}\n\nfunction boxCollides(pos, size, pos2, size2) {\n    return collides(pos[0], pos[1],\n                    pos[0] + size[0], pos[1] + size[1],\n                    pos2[0], pos2[1],\n                    pos2[0] + size2[0], pos2[1] + size2[1]);\n}\n```\n\nThese two functions could be consolidated into one, but I find it easier to read this way. `collides` takes the coordinates for the top/left and bottom/right corners for both boxes and checks to see if there are any gaps.\n\nThink of it this way: if `r` is the x coordinate of the right side of box A and `x2` is the x coordinate of the left side of box B, if `r &lt;= x2` is true then there's a gap and no matter any other positions or sizes of the boxes there cannot be an overlap, so there is no collision. There are 4 checks: one for each sides of the boxes. If there's ever a gap: no collision.\n\nIllustrations might help here, but this article isn't focusing on collision detection. You should be able to use the above functions without worrying too much about how it works. (Note: technically this is a very simplified form of the [separating axis theorem](http://www.sevenson.com.au/actionscript/sat/)). If you google \"2d box collision\" you will find this algorithm in several forms.\n\nThe `boxCollides` function is a wrapper around `collides` so that we can pass our native vector objects into it (which are simple 2-element arrays). It also converts our `size` values into absolute coordinates so it can compare the values.\n\nAnd here's the mother lode of code that actually runs the collision detection:\n\n```js\nfunction checkCollisions() {\n    checkPlayerBounds();\n    \n    // Run collision detection for all enemies and bullets\n    for(var i=0; i&lt;enemies.length; i++) {\n        var pos = enemies[i].pos;\n        var size = enemies[i].sprite.size;\n\n        for(var j=0; j&lt;bullets.length; j++) {\n            var pos2 = bullets[j].pos;\n            var size2 = bullets[j].sprite.size;\n\n            if(boxCollides(pos, size, pos2, size2)) {\n                // Remove the enemy\n                enemies.splice(i, 1);\n                i--;\n\n                // Add score\n                score += 100;\n\n                // Add an explosion\n                explosions.push({\n                    pos: pos,\n                    sprite: new Sprite('img/sprites.png',\n                                       [0, 117],\n                                       [39, 39],\n                                       16,\n                                       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],\n                                       null,\n                                       true)\n                });\n\n                // Remove the bullet and stop this iteration\n                bullets.splice(j, 1);\n                break;\n            }\n        }\n\n        if(boxCollides(pos, size, player.pos, player.sprite.size)) {\n            gameOver();\n        }\n    }\n}\n```\n\nCollision detection is inherently exponential because you need to check collisions between all entities in the scene. For our game, we need to check every single enemy against every single bullet. The code loops through the `enemies` array and checks each enemy against all bullets by looping over the `bullets` array.\n\nIt calls `boxCollides` with the enemy and bullet's position and size (which is just the size of the sprite), and if it returns true does the following:\n\n1. Removes the enemy\n2. Adds to the score\n3. Adds an explosion entity\n4. Removes the bullet\n5. Stops the inner loop over bullets because the enemy doesn't exist anymore\n\nWe use the array splicing technique again to remove entities from an array. Again, this isn't a best practice, and it's better to mark enemies for removal and do it later, but this keeps the code simple.\n\nNote how we create an explosion. You should be use to this pattern by now. We create an object with `pos` and `sprite` properties, and the sprite maps to the 13 frames of animation in the sprite map. Note that we pass `true` as the last argument which says to run the animation only once. The `update` loop [checks for explosions that have finished and removes them](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L152).\n\nNote these 3 lines of the `checkCollisions` function at the end of the loop over `enemies`:\n\n```js\nif(boxCollides(pos, size, player.pos, player.sprite.size)) {\n    gameOver();\n}\n```\n\n`pos` and `size` are the position and size of the current enemy being checked, so this checks if the enemy has collided with the player. If it has, it signals a game over.\n\nLastly, let's talk about `checkPlayerBounds`. Here's what it looks like:\n\n```js\nfunction checkPlayerBounds() {\n    // Check bounds\n    if(player.pos[0] &lt; 0) {\n        player.pos[0] = 0;\n    }\n    else if(player.pos[0] &gt; canvas.width - player.sprite.size[0]) {\n        player.pos[0] = canvas.width - player.sprite.size[0];\n    }\n\n    if(player.pos[1] &lt; 0) {\n        player.pos[1] = 0;\n    }\n    else if(player.pos[1] &gt; canvas.height - player.sprite.size[1]) {\n        player.pos[1] = canvas.height - player.sprite.size[1];\n    }\n}\n```\n\nIt simply keeps the player inside the boundaries of the game by forcing it's x and y coordinates to be between 0 and `canvas.width`/`canvas.height`.\n\n## Rendering\n\nWe are almost done! We just need to define the `render` function which is called by our game loop to render the scene each frame. Here's what it looks like:\n\n```js\n// Draw everything\nfunction render() {\n    ctx.fillStyle = terrainPattern;\n    ctx.fillRect(0, 0, canvas.width, canvas.height);\n\n    // Render the player if the game isn't over\n    if(!isGameOver) {\n        renderEntity(player);\n    }\n\n    renderEntities(bullets);\n    renderEntities(enemies);\n    renderEntities(explosions);\n};\n\nfunction renderEntities(list) {\n    for(var i=0; i&lt;list.length; i++) {\n        renderEntity(list[i]);\n    }    \n}\n\nfunction renderEntity(entity) {\n    ctx.save();\n    ctx.translate(entity.pos[0], entity.pos[1]);\n    entity.sprite.render(ctx);\n    ctx.restore();\n}\n```\n\nThe first thing we do is render the background. We [created the terrain pattern in the `init` function](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L36) using the [`ctx.createPattern`](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dfnReturnLink-1) function, and we render it by setting the `fillStyle` of the context and rendering to the whole canvas with `fillRect`.\n\nWe then render the player, all bullets, all enemies, and all explosions. `renderEntities` loops through an array of entities and renders them. `renderEntity` uses canvas' [transformations](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#transformations) to place it on the screen. `ctx.save` saves the current transformation and `ctx.restore` restores it, obviously.\n\nIf you look back the [sprite's render function](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/sprite.js#L47), you'll see that it renders it at (0, 0), but our call to `ctx.translate` transforms it to the right place on the screen.\n\n## Game Over\n\nThe last little bit we need to do is handle the game over state. We need to define a `gameOver` function that shows a game over screen, and also `reset` which restarts the game.\n\n```js\n// Game over\nfunction gameOver() {\n    document.getElementById('game-over').style.display = 'block';\n    document.getElementById('game-over-overlay').style.display = 'block';\n    isGameOver = true;\n}\n\n// Reset game to original state\nfunction reset() {\n    document.getElementById('game-over').style.display = 'none';\n    document.getElementById('game-over-overlay').style.display = 'none';\n    isGameOver = false;\n    gameTime = 0;\n    score = 0;\n\n    enemies = [];\n    bullets = [];\n\n    player.pos = [50, canvas.height / 2];\n};\n```\n\n`gameOver` displays the screen defined in [`index.html`](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/index.html) which says \"Game Over\" and has a button to restart.\n\n`reset` sets all the game state back to the beginning and hides the game over screen, effectively restarting the game.\n\nNote that [back in `init`](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/js/app.js#L38) an event handler was added to the \"play again\" button shown in the game over screen which calls `reset`. \n\n## Making it Pretty\n\nThere's a [tiny amount of css](https://github.com/jlongster/canvas-game-bootstrap/blob/a878158f39a91b19725f726675c752683c9e1c08/css/app.css) which centers the canvas, darkens the background, and styles the game over screen and other components.\n\nIdeally you would scale the width and height of the canvas up if the game is being played on a larger screen. I will show how to do that in a future blog post.\n\n\n## Adding Sounds\n\nThis article focuses on rendering games with canvas, and skips over audio integration. I won't go into detail about it, but I'll point you to some resources to help you integrate sounds. The [`audio`](https://developer.mozilla.org/en-US/docs/HTML/Element/audio) tag exists, of course, but for games we really need an API to play multiple sounds at once and have fine-grained control over them.\n\nThe web is slowly converging on the [Web Audio API](https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html) which provides advanced audio manipulation (as of June 2013). As of right now, only Chrome and Safari implement it, but Firefox and Opera should be getting it in the next version. This is a huge deal, as it has taken years to get good cross-browser audio support. Firefox has had the [Audio Data API](https://wiki.mozilla.org/Audio_Data_API) for a long time, but it failed to gain traction.\n\n[This article](http://www.html5rocks.com/en/tutorials/webaudio/intro/) is a great intro to the Web Audio API. If you want to support older Firefox browsers (older than version 22), you'll have to add Audio Data API support as well as Web Audio. [This page](https://wiki.mozilla.org/Audio_Data_API) has several examples of the Audio Data API. \n\nEventually the [game bootstrap](https://github.com/jlongster/canvas-game-bootstrap/) project will include sample code for audio integration. I plan on writing another post detailing sound and other improvements to the game engine.\n\nIE is the only one that doesn't provide an advanced audio API, as far as I know.\n\n## Final Thoughts\n\nThere's a lot to learn here, but I hope I've broken it down to simple enough pieces to show that making games is not that crazy. It just takes time to learn all the pieces needed. Please leave questions in the comments and I'd be happy to answer them!\n\nI focused on using the raw canvas API to shine some light on how easy it is to create 2d games in the browser these days. Of course, there are [several game engines](https://www.google.com/search?hl=en&amp;q=javascript+game+engine&amp;oq=javascript+game+engine&amp;gs_l=serp.12..0j0i7l2j0j0i7l6.13246.13246.0.13920.1.1.0.0.0.0.167.167.0j1.1.0.les%3Bckwqrh..0.0...1..5.serp.qmeKhSoA9fA) that you can use if you want to get really complex. Most game engines standardize the interface for an entity, so all you have to do is define an `update` and `render` function for each type and a scene manager automatically calls them for all entities each frame.\n\nHey *you*, go create games like [our example game](http://jlongster.github.com/canvas-game-bootstrap/)!","headerimg":"","date":20130319,"readnext":"Reflections-on-My-Game-Off-Experience"},"readnext":{"title":"Reflections on My Game Off Experience","abstract":"After an intense few weeks building a multiplayer first person shooter on the web, I take a look at what I achieved and what I did wrong.","shorturl":"Reflections-on-My-Game-Off-Experience"}}},"user":{"admin":false},"config":{"url":"http://jlongster.com"}}</script>
+    <script src="./Making Sprite-based Games with Canvas_files/bundle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-9014321-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+  
+
+</body></html>

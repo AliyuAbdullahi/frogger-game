@@ -30,6 +30,9 @@ var Engine = (function(global) {
        
         ctx = canvas.getContext('2d'),
         lastTime;
+        var ab;
+        var live =5;
+        var score=0;
        var jump = document.getElementById("jump");
          var die = document.getElementById("move");
 
@@ -56,7 +59,6 @@ var Engine = (function(global) {
          */
         update(dt);
         render();
-
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
          */
@@ -65,7 +67,8 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+       ab = win.requestAnimationFrame(main);
+       stopGame();
     };
 
     /* This function does some initial setup that should only occur once,
@@ -89,12 +92,14 @@ var Engine = (function(global) {
      * functionality this way (you could just implement collision detection
      * on the entities themselves within your app.js file).
      */
+     
     function update(dt) {
 
         updateEntities(dt);
      checkCollisions();
         checkPoint();
     }
+    
     function checkPoint()
     {
         allEnemies.forEach(function(enemy)
@@ -108,8 +113,21 @@ var Engine = (function(global) {
         {
             player.x = 200;
             player.y = 420;
+            score ++;
+
         }
     }
+   function stopGame()
+  {
+    if(live ===0)
+    {
+    window.cancelAnimationFrame(ab);
+ctx.font="40px Arial";
+ctx.fillStyle="Red";
+ctx.fillText("Game Over!!!", canvas.width-300, 400);
+}
+
+  }
     function checkCollisions(){
          allEnemies.forEach(function(enemy)
         {
@@ -118,11 +136,31 @@ var Engine = (function(global) {
                 
                 player.x = 200;
                 player.y = 420;
+                live --;
+
                 jump.play();
                 
             }
         });
     
+    }
+      function liveLeft()
+    {
+         ctx.drawImage(Resources.get("images/Heart.png"), canvas.width-170,60, 50,50);
+         ctx.font="20px Arial";
+         ctx.fillStyle="white";
+         ctx.fillText(live,canvas.width-70, 100);
+
+    }
+    function addScore()
+    {
+        ctx.font="20px Arial";
+        ctx.fillStyle="white";
+        ctx.fillText("Socre:"+score,canvas.width-400,100);
+    }
+    function changePlayer()
+    {
+
     }
 
     /* Thier is called by the update function  and loops through all of the
@@ -174,7 +212,9 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
+                  
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+
             }
         }
 
@@ -195,6 +235,8 @@ var Engine = (function(global) {
         });
 
         player.render();
+       liveLeft();
+       addScore();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -214,7 +256,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Heart.png'
     ]);
     Resources.onReady(init);
 
