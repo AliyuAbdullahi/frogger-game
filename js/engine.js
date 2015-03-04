@@ -121,10 +121,13 @@ var Engine = (function(global) {
   {
     if(live ===0)
     {
-    window.cancelAnimationFrame(ab);
+   
 ctx.font="40px Arial";
 ctx.fillStyle="Red";
 ctx.fillText("Game Over!!!", canvas.width-300, 400);
+ctx.fillText("Score:"+score,canvas.width-300, 460);
+ctx.fillText("Refresh page to play again", canvas.width-500, 520);
+ window.cancelAnimationFrame(ab);
 }
 
   }
